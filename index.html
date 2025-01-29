@@ -3,79 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Manoj Pandurang Mali | Principal Software Engineer | AI Enthusiast">
-    <meta name="keywords" content="Manoj Mali, Software Engineer, AI Enthusiast, System Design, MicroSaaS">
-    <meta name="author" content="Manoj Pandurang Mali">
-    <title>Manoj Pandurang Mali</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Manoj Mali | Principal Software Engineer</title>
+    <style>
+        :root {
+            --primary: #2A5C82;
+            --secondary: #4CAF50;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        nav {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        nav a {
+            margin-right: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(45deg, var(--primary), #1a365f);
+            color: white;
+        }
+        .experience-card, .project-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary);
+            color: white;
+        }
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
+    <nav>
+        <div class="container">
+            <a href="#home">Home</a>
+            <a href="#experience">Experience</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#education">Education</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
         <div class="container">
             <h1>Manoj Pandurang Mali</h1>
-            <p>Principal Software Engineer | AI Enthusiast</p>
-            <nav class="nav">
-                <a href="#about">About Me</a>
-                <a href="#portfolio">Portfolio</a>
-                <a href="#blog">Blog</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </div>
-    </header>
-
-    <section id="about" class="section about">
-        <div class="container">
-            <h2>About Me</h2>
-            <p>Welcome! I'm Manoj Pandurang Mali, a Principal Software Engineer with over 13 years of experience in designing and developing scalable, high-performance backend systems. I am passionate about solving complex engineering challenges and exploring the world of AI to build innovative solutions.</p>
-            <h3>Skills</h3>
-            <ul>
-                <li>Node.js, Java, Python</li>
-                <li>Kubernetes, GCP, AWS</li>
-                <li>Kafka, Hazelcast</li>
-                <li>System Design and Scalability</li>
-            </ul>
-        </div>
-    </section>
-
-    <section id="portfolio" class="section portfolio">
-        <div class="container">
-            <h2>Portfolio</h2>
-            <div class="project">
-                <h3>Async API (Conversational Intelligence)</h3>
-                <p>Built scalable APIs for conversational intelligence using technologies like Node.js, Java, Kubernetes, GCP, Kafka, and Hazelcast. Improved system efficiency by 60%.</p>
-            </div>
-            <div class="project">
-                <h3>MicroSaaS Projects</h3>
-                <p>Currently exploring AI-driven MicroSaaS products to solve niche problems and generate passive income.</p>
+            <p>Principal Software Engineer | Cloud Architect | System Design Expert</p>
+            <div class="contact-info">
+                <a href="tel:+91-942-075-9196" style="color: white;">+91-942-075-9196</a>
+                <a href="mailto:mr.manoj.mali@gmail.com" style="color: white;">mr.manoj.mali@gmail.com</a>
             </div>
         </div>
     </section>
 
-    <section id="blog" class="section blog">
-        <div class="container">
-            <h2>Blog</h2>
-            <p>Coming soon: Insights into AI, System Design, and MicroSaaS development.</p>
-        </div>
-    </section>
-
-    <section id="contact" class="section contact">
-        <div class="container">
-            <h2>Contact</h2>
-            <p>Let's connect and collaborate!</p>
+    <section class="container" id="experience">
+        <h2>Professional Experience</h2>
+        
+        <div class="experience-card">
+            <h3>Symbl.ai - Principal Software Engineer (May 2020 - Present)</h3>
             <ul>
-                <li>Email: <a href="mailto:mr.manoj.mali@gmail.com">mr.manoj.mali@gmail.com</a></li>
-                <li>LinkedIn: <a href="https://linkedin.com/in/minstermind" target="_blank">linkedin.com/in/minstermind</a></li>
-                <li>GitHub: <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></li>
-                <li>Twitter: <a href="https://twitter.com/yourusername" target="_blank">twitter.com/yourusername</a></li>
+                <li>Led design of scalable solutions improving system efficiency by 60%</li>
+                <li>Reduced infrastructure costs by 50% through architectural optimizations</li>
+                <li>Maintained 98% client satisfaction score through technical leadership</li>
             </ul>
         </div>
+
+        <div class="experience-card">
+            <h3>Chalo.com - Software Development Engineer III (Dec 2017 - May 2020)</h3>
+            <ul>
+                <li>Architected microservices transformation reducing complexity by 70%</li>
+                <li>Implemented CI/CD pipelines reducing manual intervention by 80%</li>
+                <li>Built ticket booking platform handling 40,000+ MAU</li>
+            </ul>
+        </div>
+
+        <!-- Add other experiences following same pattern -->
     </section>
 
-    <footer class="footer">
+    <section class="container" id="skills">
+        <h2>Technical Expertise</h2>
+        <div class="skills-container">
+            <div class="experience-card">
+                <h3>Core Technologies</h3>
+                <ul>
+                    <li>Node.js | Java | Python</li>
+                    <li>GCP | AWS | Kubernetes</li>
+                    <li>PostgreSQL | Kafka | BigQuery</li>
+                </ul>
+            </div>
+            
+            <div class="experience-card">
+                <h3>Architectural Excellence</h3>
+                <ul>
+                    <li>Microservices Architecture</li>
+                    <li>Distributed Systems Design</li>
+                    <li>High-Performance Systems</li>
+                </ul>
+            </div>
+            
+            <div class="experience-card">
+                <h3>Leadership</h3>
+                <ul>
+                    <li>Team Mentoring & Development</li>
+                    <li>Agile/DevOps Implementation</li>
+                    <li>Client Communication</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" id="projects">
+        <h2>Key Projects</h2>
+        
+        <div class="project-card">
+            <h3>🚀 Symbl.ai Async API</h3>
+            <p>RESTful interface processing 3,000 concurrent jobs for audio/video/text analysis</p>
+            <p><strong>Impact:</strong> Enabled enterprise-grade conversational intelligence at scale</p>
+        </div>
+
+        <div class="project-card">
+            <h3>📊 Chalo Bus Tracking System</h3>
+            <p>Real-time tracking system for 1M+ daily users reducing wait times by 50%</p>
+            <p><strong>Tech:</strong> Microservices, WebSocket, Geolocation APIs</p>
+        </div>
+
+        <!-- Add other projects following same pattern -->
+    </section>
+
+    <section class="container" id="education">
+        <h2>Education & Certifications</h2>
+        <div class="experience-card">
+            <h3>Shivaji University</h3>
+            <p>Bachelor of Engineering, Information Technology</p>
+        </div>
+    </section>
+
+    <footer>
         <div class="container">
-            <p>&copy; 2024 Manoj Pandurang Mali. All Rights Reserved.</p>
+            <h3>Let's Connect</h3>
+            <div style="margin: 1rem 0;">
+                <a href="https://linkedin.com/in/yourprofile" style="color: white; margin: 0 1rem;">LinkedIn</a>
+                <a href="https://github.com/yourprofile" style="color: white; margin: 0 1rem;">GitHub</a>
+            </div>
+            <p>Open for technical leadership opportunities and architecture challenges</p>
         </div>
     </footer>
 </body>
 </html>
-
