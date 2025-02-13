@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manoj Mali - Personal Portfolio</title>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         /* Global Styles */
         :root {
@@ -239,6 +241,8 @@
             gap: 2em;
             justify-content: center;
             margin-top: 2em;
+            transition: all 0.5s ease;
+            position: relative;
         }
 
         .project-card {
@@ -247,14 +251,16 @@
             border-radius: 10px;
             overflow: hidden;
             text-align: center;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
             background: var(--light-bg);
             color: var(--text-dark);
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
         }
 
         .project-card:hover {
             transform: scale(1.05);
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .project-card img {
@@ -265,6 +271,64 @@
 
         .project-card h3 {
             margin: 1em 0 0 0;
+        }
+
+        .project-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            text-align: left;
+            padding: 0 1em;
+            box-sizing: border-box;
+            background-color: #f3f3f3;
+            color: #000;
+            border-top: 1px solid #ddd;
+        }
+
+        /*.project-card.active .project-details {*/
+        /*    max-height: 300px;*/
+        /*    padding: 1em;*/
+        /*}*/
+
+        .project-card.centered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 1002;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            cursor: auto;
+            border: 2px solid var(--primary-color);
+            transition: all 0.5s ease;
+            pointer-events: auto; /* Ensure the open card remains clickable */
+            background-color: #fff;
+            color: #000;
+        }
+
+        .project-card.centered .project-details {
+            max-height: 500px;
+            padding: 1em;
+        }
+
+        .project-card.centered img {
+            height: 300px;
+        }
+
+        .project-card.centered h3 {
+            font-size: 2em;
+        }
+
+        /* Overlay to close card */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1001;
+            pointer-events: auto;
         }
 
         /* Experience Timeline */
@@ -349,7 +413,60 @@
             color: #fff;
             text-decoration: none;
         }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            align-items: center;
+            margin-right: 1em;
+        }
+
+        .social-icons a {
+            color: #fff;
+            margin: 0 0.5em;
+            font-size: 1.5em;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-color);
+        }
+
+        .experience-details {
+            max-height: 0;
+            overflow: hidden;
+            margin-top: 0;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 0 1em;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+
+        .timeline-item.active .experience-details {
+            max-height: 300px;
+            padding: 1em;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Add cursor effect for better UX */
+        .timeline-item {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: scale(1.02);
+        }
+
+
     </style>
+
 </head>
 <body class="dark-mode">
 <!-- Header -->
@@ -363,8 +480,17 @@
         <a href="#contact">Contact</a>
     </nav>
     <div class="social-icons">
-        <a href="https://github.com/MinsterMind" target="_blank"><i class="fab fa-github"></i></a>
-        <a href="https://www.linkedin.com/in/minstermind/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <!-- GitHub -->
+        <a href="https://github.com/MinsterMind" target="_blank" title="GitHub">
+            <i class="fa-brands fa-github"></i>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/minstermind/" target="_blank" title="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+        </a>
+
+        <!-- Mode Toggle Button -->
         <button class="toggle-mode" id="mode-toggle" onclick="toggleMode()">🌞</button>
     </div>
 </header>
@@ -401,69 +527,138 @@
 <!-- Projects -->
 <section id="projects" class="projects">
     <h2>Projects</h2>
-    <div class="projects-grid">
-        <div class="project-card">
+    <div class="projects-grid" id="projectsGrid">
+        <!-- Call Score -->
+        <div class="project-card" onclick="expandProject(this)">
             <img src="https://via.placeholder.com/300x200?text=Call+Score" alt="Call Score">
             <h3>Call Score</h3>
-            <p>API to score sales calls based on predefined criteria using LLMs.</p>
+            <div class="project-details">
+                <p><strong>Description:</strong> Developed an API to analyze sales call audio, generate transcripts, and assign scores based on predefined criteria.</p>
+                <p><strong>Technologies:</strong> Python, OpenAI GPT-3.5, Langchain, Kafka</p>
+                <p><strong>Role:</strong> Led the design and implementation, optimized the pipeline, and integrated scalable processing.</p>
+            </div>
         </div>
-        <div class="project-card">
+
+        <!-- Real-Time Assist -->
+        <div class="project-card" onclick="expandProject(this)">
             <img src="https://via.placeholder.com/300x200?text=Real-Time+Assist" alt="Real-Time Assist">
             <h3>Real-Time Assist</h3>
-            <p>RAG-based system for providing live suggestions to sales representatives.</p>
+            <div class="project-details">
+                <p><strong>Description:</strong> Designed a RAG-based system for real-time contextual suggestions during live sales calls.</p>
+                <p><strong>Technologies:</strong> Python, OpenAI GPT-3.5, Langchain, RAG</p>
+                <p><strong>Role:</strong> Built a WebSocket API, optimized prompt engineering, and scaled infrastructure.</p>
+            </div>
         </div>
-        <div class="project-card">
+
+        <!-- Bhagavad Gita Chatbot -->
+        <div class="project-card" onclick="expandProject(this)">
             <img src="https://via.placeholder.com/300x200?text=Bhagavad+Gita+Chatbot" alt="Bhagavad Gita Chatbot">
             <h3>Bhagavad Gita Chatbot</h3>
-            <p>Chatbot simulating philosophical conversations with Gita characters.</p>
+            <div class="project-details">
+                <p><strong>Description:</strong> Created a chatbot for interactive conversations with Bhagavad Gita characters.</p>
+                <p><strong>Technologies:</strong> Python, ChromaDB, Google Gemini</p>
+                <p><strong>Role:</strong> Engineered embeddings, integrated Google Gemini, and developed the backend in Python.</p>
+            </div>
         </div>
-        <div class="project-card">
+
+        <!-- Bus Tracking and ETA -->
+        <div class="project-card" onclick="expandProject(this)">
             <img src="https://via.placeholder.com/300x200?text=Bus+Tracking" alt="Bus Tracking System">
             <h3>Bus Tracking & ETA</h3>
-            <p>Real-time bus tracking and ETA prediction system for commuters.</p>
+            <div class="project-details">
+                <p><strong>Description:</strong> Built a real-time bus tracking system with accurate ETA predictions.</p>
+                <p><strong>Technologies:</strong> Java, RabbitMQ, Firebase, Microservices</p>
+                <p><strong>Role:</strong> Migrated architecture, developed real-time services, and optimized GPS data pipelines.</p>
+            </div>
         </div>
-        <div class="project-card">
+
+        <!-- Article Recommendation System -->
+        <div class="project-card" onclick="expandProject(this)">
             <img src="https://via.placeholder.com/300x200?text=Article+Recommendation" alt="Article Recommendation">
             <h3>Article Recommendation</h3>
-            <p>AI-powered engine recommending articles based on user activity.</p>
+            <div class="project-details">
+                <p><strong>Description:</strong> Developed a recommendation engine to suggest articles based on user activity.</p>
+                <p><strong>Technologies:</strong> Node.js, RabbitMQ, Python, BeautifulSoup</p>
+                <p><strong>Role:</strong> Designed architecture, built scraping pipelines, and optimized workflows.</p>
+            </div>
         </div>
     </div>
 </section>
 
+
+<!-- Experience -->
 <!-- Experience -->
 <section id="experience" class="experience">
     <h2>Experience Timeline</h2>
     <div class="timeline">
-        <div class="timeline-item">
+        <!-- Symbl.ai -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
                 <h3>Principal Engineer - Symbl.ai</h3>
                 <span class="timeline-date">May 2020 - Present</span>
-                <p>Led the development of scalable AI applications with optimized infrastructure.</p>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Led the design and development of scalable software solutions, improving concurrency from 60 to 5000.</li>
+                        <li>Established best practices in software development, reducing defects by 20%.</li>
+                        <li>Optimized infrastructure, achieving a 50% cost reduction.</li>
+                        <li>Provided direct client support with a 98% satisfaction score.</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="timeline-item">
+
+        <!-- Chalo.com -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
                 <h3>Software Engineer III - Chalo.com</h3>
                 <span class="timeline-date">Dec 2017 - May 2020</span>
-                <p>Transformed legacy systems into microservices and built high-traffic applications.</p>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Transformed a monolithic system into a microservices architecture handling 1M+ GPS records per day.</li>
+                        <li>Implemented CI/CD pipelines, cutting manual intervention by 80%.</li>
+                        <li>Mentored a team of developers, boosting productivity by 30%.</li>
+                        <li>Developed a ticket booking platform with 40,000+ MAUs.</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="timeline-item">
+
+        <!-- Crowdfire -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-                <h3>Senior Developer - Crowdfire</h3>
+                <h3>Senior Software Developer - Crowdfire</h3>
                 <span class="timeline-date">June 2015 - Dec 2017</span>
-                <p>Built recommendation engines and analytics services for personalized content delivery.</p>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Built an article recommendation system scraping 0.5M+ articles daily.</li>
+                        <li>Optimized backend processes, reducing load times by 40%.</li>
+                        <li>Developed a user analytics service tracking 100,000+ profiles daily.</li>
+                        <li>Enhanced security measures to meet industry standards.</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="timeline-item">
+
+        <!-- TCS -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-                <h3>System Engineer - TCS</h3>
+                <h3>System Engineer - Tata Consultancy Services</h3>
                 <span class="timeline-date">Mar 2013 - May 2015</span>
-                <p>Optimized databases and improved system reliability for enterprise solutions.</p>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Managed database administration, boosting system reliability by 30%.</li>
+                        <li>Designed efficient database schemas, reducing query times by 20%.</li>
+                        <li>Collaborated on projects optimizing enterprise-level systems.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -507,7 +702,24 @@
 
         window.addEventListener("scroll", revealOnScroll);
         revealOnScroll(); // Initial check
+
+        // const overlay = document.createElement('div');
+        // overlay.id = 'overlay';
+        // document.body.appendChild(overlay);
+        // overlay.addEventListener('click', closeActiveCard);
+
     });
+
+    function closeActiveCard() {
+        if (activeCard) {
+            activeCard.classList.remove('centered');
+            activeCard = null;
+        }
+
+        // Hide the overlay
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'none';
+    }
 
     // Toggle Dark/Light Mode
     function toggleMode() {
@@ -525,6 +737,42 @@
             modeToggle.textContent = '🌞';
         }
     }
+
+    function toggleProjectDetails(card) {
+        card.classList.toggle('active');
+    }
+
+    let activeCard = null;
+
+    function expandProject(clickedCard) {
+        // If the clicked card is already active, collapse it
+        if (clickedCard === activeCard) {
+            closeActiveCard();
+            return;
+        }
+
+        // Close any existing active card
+        if (activeCard) {
+            activeCard.classList.remove('centered');
+            activeCard = null;
+        }
+
+        // Expand the clicked card
+        clickedCard.classList.add('centered');
+        activeCard = clickedCard;
+
+        // Show the overlay to darken the background
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'block';
+        overlay.style.pointerEvents = 'auto'; // Allow closing the overlay
+    }
+
+    function toggleExperienceDetails(item) {
+        item.classList.toggle('active');
+    }
+
 </script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 </body>
 </html>
