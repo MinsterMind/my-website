@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporal GKE Cost Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .component-card {
+            transition: all 0.3s ease;
+        }
+        .component-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6 card">
+            <div class="flex items-center gap-3 mb-6">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <h1 class="text-3xl font-bold text-gray-800">Temporal GKE Cost Calculator</h1>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Number of Schedules
+                    </label>
+                    <input
+                        id="schedules"
+                        type="number"
+                        value="1000"
+                        min="1"
+                        max="100000"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        GCP Region
+                    </label>
+                    <select
+                        id="region"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="us-central1">US Central (Iowa)</option>
+                        <option value="europe-west1">Europe West (Belgium)</option>
+                        <option value="asia-southeast1">Asia Southeast (Singapore)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Cost Summary -->
+            <div id="cost-summary" class="gradient-bg text-white rounded-lg p-6 mb-6">
+                <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                    Cost Summary
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Hourly</div>
+                        <div id="hourly-cost" class="text-2xl font-bold">$0.00</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Daily</div>
+                        <div id="daily-cost" class="text-2xl font-bold">$0.00</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-90">Monthly</div>
+                        <div id="monthly-cost" class="text-2xl font-bold">$0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resource Breakdown -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"></path>
+                    </svg>
+                    Resource Allocation
+                </h3>
+                <div id="resource-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Resources will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Infrastructure Costs -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Infrastructure Costs Breakdown</h3>
+                <div id="infrastructure-costs" class="space-y-3">
+                    <!-- Infrastructure breakdown will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Monthly Projection -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Monthly Cost Projection</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">By Component (Monthly)</h4>
+                        <div id="monthly-breakdown" class="space-y-2">
+                            <!-- Monthly breakdown will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">Cost per Schedule</h4>
+                        <div class="bg-blue-50 p-4 rounded-lg text-center">
+                            <div id="cost-per-schedule" class="text-2xl font-bold text-blue-600">$0.00</div>
+                            <div class="text-sm text-gray-600">per schedule per month</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scaling Recommendations -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-bold text-yellow-800 mb-4">Scaling Recommendations</h3>
+                <div id="recommendations" class="space-y-2 text-sm">
+                    <!-- Recommendations will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Architecture Notes -->
+            <div class="bg-gray-50 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Architecture Assumptions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Temporal Components:</h4>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>Frontend service for API access</li>
+                            <li>History service for workflow execution</li>
+                            <li>Matching service for task routing</li>
+                            <li>Worker pods for schedule execution</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Additional Services:</h4>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>Java GRPC service instances</li>
+                            <li>PostgreSQL database with SSD storage</li>
+                            <li>Load balancer for traffic distribution</li>
+                            <li>Network egress costs not included</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GKE pricing (approximate USD per hour)
+        const pricing = {
+            'us-central1': {
+                e2_small: 0.0335,
+                e2_medium: 0.0670,
+                e2_standard_4: 0.1340,
+                e2_standard_8: 0.2680,
+                n1_standard_1: 0.0475,
+                n1_standard_2: 0.0950,
+                n1_standard_4: 0.1900,
+                n1_standard_8: 0.3800,
+                persistent_disk_ssd: 0.000238,
+                persistent_disk_standard: 0.000057,
+                load_balancer: 0.025
+            },
+            'europe-west1': {
+                e2_small: 0.0369,
+                e2_medium: 0.0737,
+                e2_standard_4: 0.1474,
+                e2_standard_8: 0.2948,
+                n1_standard_1: 0.0523,
+                n1_standard_2: 0.1045,
+                n1_standard_4: 0.2090,
+                n1_standard_8: 0.4180,
+                persistent_disk_ssd: 0.000262,
+                persistent_disk_standard: 0.000063,
+                load_balancer: 0.025
+            },
+            'asia-southeast1': {
+                e2_small: 0.0369,
+                e2_medium: 0.0737,
+                e2_standard_4: 0.1474,
+                e2_standard_8: 0.2948,
+                n1_standard_1: 0.0523,
+                n1_standard_2: 0.1045,
+                n1_standard_4: 0.2090,
+                n1_standard_8: 0.4180,
+                persistent_disk_ssd: 0.000262,
+                persistent_disk_standard: 0.000063,
+                load_balancer: 0.025
+            }
+        };
+
+        function formatCurrency(amount) {
+            return `$${amount.toFixed(2)}`;
+        }
+
+        function calculateCosts() {
+            const schedules = parseInt(document.getElementById('schedules').value) || 0;
+            const region = document.getElementById('region').value;
+            const regionPricing = pricing[region];
+            
+            // Base resource allocation
+            let temporalFrontend = { instances: 2, type: 'e2_medium' };
+            let temporalHistory = { instances: 2, type: 'e2_standard_4' };
+            let temporalMatching = { instances: 1, type: 'e2_medium' };
+            let temporalWorker = { instances: 2, type: 'e2_standard_4' };
+            let javaService = { instances: 2, type: 'e2_medium' };
+            let postgres = { instances: 1, type: 'n1_standard_4', storage: 100 };
+
+            // Scale resources based on schedule count
+            if (schedules > 5000) {
+                temporalHistory.instances = Math.ceil(schedules / 2500);
+                temporalHistory.type = 'e2_standard_8';
+                temporalWorker.instances = Math.ceil(schedules / 2500);
+                temporalWorker.type = 'e2_standard_8';
+                postgres.type = 'n1_standard_8';
+                postgres.storage = 200;
+            } else if (schedules > 2000) {
+                temporalHistory.instances = 3;
+                temporalWorker.instances = 3;
+                postgres.storage = 150;
+            }
+
+            if (schedules > 10000) {
+                temporalFrontend.instances = 3;
+                temporalMatching.instances = 2;
+                javaService.instances = 3;
+                javaService.type = 'e2_standard_4';
+                postgres.storage = 500;
+            }
+
+            // Calculate hourly costs
+            const costs = {
+                temporalFrontend: temporalFrontend.instances * regionPricing[temporalFrontend.type],
+                temporalHistory: temporalHistory.instances * regionPricing[temporalHistory.type],
+                temporalMatching: temporalMatching.instances * regionPricing[temporalMatching.type],
+                temporalWorker: temporalWorker.instances * regionPricing[temporalWorker.type],
+                javaService: javaService.instances * regionPricing[javaService.type],
+                postgres: postgres.instances * regionPricing[postgres.type],
+                storage: postgres.storage * regionPricing.persistent_disk_ssd,
+                loadBalancer: regionPricing.load_balancer
+            };
+
+            const totalHourly = Object.values(costs).reduce((sum, cost) => sum + cost, 0);
+            const totalDaily = totalHourly * 24;
+            const totalMonthly = totalDaily * 30;
+
+            // Update cost summary
+            document.getElementById('hourly-cost').textContent = formatCurrency(totalHourly);
+            document.getElementById('daily-cost').textContent = formatCurrency(totalDaily);
+            document.getElementById('monthly-cost').textContent = formatCurrency(totalMonthly);
+
+            // Update resource grid
+            const resourceGrid = document.getElementById('resource-grid');
+            resourceGrid.innerHTML = `
+                <div class="bg-blue-50 p-4 rounded-lg component-card">
+                    <h4 class="font-semibold text-blue-800">Temporal Frontend</h4>
+                    <p class="text-sm text-gray-600">${temporalFrontend.instances}x ${temporalFrontend.type}</p>
+                    <p class="text-lg font-bold text-blue-600">${formatCurrency(costs.temporalFrontend)}/hr</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg component-card">
+                    <h4 class="font-semibold text-green-800">Temporal History</h4>
+                    <p class="text-sm text-gray-600">${temporalHistory.instances}x ${temporalHistory.type}</p>
+                    <p class="text-lg font-bold text-green-600">${formatCurrency(costs.temporalHistory)}/hr</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg component-card">
+                    <h4 class="font-semibold text-purple-800">Temporal Matching</h4>
+                    <p class="text-sm text-gray-600">${temporalMatching.instances}x ${temporalMatching.type}</p>
+                    <p class="text-lg font-bold text-purple-600">${formatCurrency(costs.temporalMatching)}/hr</p>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-lg component-card">
+                    <h4 class="font-semibold text-orange-800">Temporal Workers</h4>
+                    <p class="text-sm text-gray-600">${temporalWorker.instances}x ${temporalWorker.type}</p>
+                    <p class="text-lg font-bold text-orange-600">${formatCurrency(costs.temporalWorker)}/hr</p>
+                </div>
+                <div class="bg-indigo-50 p-4 rounded-lg component-card">
+                    <h4 class="font-semibold text-indigo-800">Java Service</h4>
+                    <p class="text-sm text-gray-600">${javaService.instances}x ${javaService.type}</p>
+                    <p class="text-lg font-bold text-indigo-600">${formatCurrency(costs.javaService)}/hr</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg component-card">
+                    <h4 class="font-semibold text-red-800 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                        PostgreSQL
+                    </h4>
+                    <p class="text-sm text-gray-600">${postgres.instances}x ${postgres.type}</p>
+                    <p class="text-lg font-bold text-red-600">${formatCurrency(costs.postgres)}/hr</p>
+                </div>
+            `;
+
+            // Update infrastructure costs
+            const infrastructureCosts = document.getElementById('infrastructure-costs');
+            const computeCost = costs.temporalFrontend + costs.temporalHistory + costs.temporalMatching + costs.temporalWorker + costs.javaService + costs.postgres;
+            
+            infrastructureCosts.innerHTML = `
+                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                        </svg>
+                        Compute Instances
+                    </span>
+                    <span class="font-semibold">${formatCurrency(computeCost)}/hr</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Persistent Storage (${postgres.storage} GB SSD)
+                    </span>
+                    <span class="font-semibold">${formatCurrency(costs.storage)}/hr</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"></path>
+                        </svg>
+                        Load Balancer
+                    </span>
+                    <span class="font-semibold">${formatCurrency(costs.loadBalancer)}/hr</span>
+                </div>
+                <div class="flex justify-between items-center py-3 bg-gray-50 rounded px-3 font-bold text-lg">
+                    <span>Total Cost</span>
+                    <span class="text-blue-600">${formatCurrency(totalHourly)}/hr</span>
+                </div>
+            `;
+
+            // Update monthly breakdown
+            const monthlyBreakdown = document.getElementById('monthly-breakdown');
+            monthlyBreakdown.innerHTML = `
+                <div class="flex justify-between">
+                    <span>Temporal Services</span>
+                    <span>${formatCurrency((costs.temporalFrontend + costs.temporalHistory + costs.temporalMatching + costs.temporalWorker) * 24 * 30)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Java GRPC Service</span>
+                    <span>${formatCurrency(costs.javaService * 24 * 30)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>PostgreSQL Database</span>
+                    <span>${formatCurrency(costs.postgres * 24 * 30)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Storage & Load Balancer</span>
+                    <span>${formatCurrency((costs.storage + costs.loadBalancer) * 24 * 30)}</span>
+                </div>
+            `;
+
+            // Update cost per schedule
+            document.getElementById('cost-per-schedule').textContent = formatCurrency(totalMonthly / schedules);
+
+            // Update recommendations
+            const recommendations = document.getElementById('recommendations');
+            let recText = '';
+            
+            if (schedules < 1000) {
+                recText += '<p>• Consider using smaller instance types for cost optimization at this scale</p>';
+            } else if (schedules >= 1000 && schedules < 5000) {
+                recText += '<p>• Current configuration should handle your workload efficiently</p>';
+            } else if (schedules >= 5000 && schedules < 10000) {
+                recText += '<p>• Consider enabling horizontal pod autoscaling for Temporal workers</p>';
+            } else if (schedules >= 10000) {
+                recText += '<p>• Consider implementing Temporal namespace partitioning for better performance</p>';
+            }
+            
+            recText += '<p>• Monitor PostgreSQL connection pool usage as schedules increase</p>';
+            recText += '<p>• Consider using preemptible instances for workers to reduce costs by ~80%</p>';
+            recText += '<p>• Implement proper resource requests/limits for optimal cluster utilization</p>';
+            
+            recommendations.innerHTML = recText;
+        }
+
+        // Event listeners
+        document.getElementById('schedules').addEventListener('input', calculateCosts);
+        document.getElementById('region').addEventListener('change', calculateCosts);
+
+        // Initial calculation
+        calculateCosts();
+    </script>
+</body>
+</html>
