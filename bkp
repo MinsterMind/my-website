@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manoj Mali - Personal Portfolio</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* Global Styles */
+        :root {
+            --dark-bg: #121212;
+            --light-bg: #ffffff;
+            --primary-color: #00bcd4;
+            --text-dark: #000000;
+            --text-light: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            transition: background 0.5s, color 0.5s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Bounce animation for logo */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Floating effect for profile image */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Slide-in animation for header */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+        }
+
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em 3em;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+            margin-left: 1em;
+        }
+
+        .nav-links a {
+            margin: 0 1em;
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-icons {
+            display: flex;
+            align-items: center;
+            margin-right: 1em;
+        }
+
+        .social-icons a {
+            color: #fff;
+            margin-right: 1em;
+            font-size: 1.5em;
+        }
+
+        .toggle-mode {
+            margin-left: 1em;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1.5em;
+            color: #fff;
+            transition: color 0.3s;
+        }
+
+        /* Home */
+        .home {
+            height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1mm solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2em;
+            transition: background 0.5s;
+        }
+
+        .home.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+        }
+
+        .home.light-mode {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+        }
+
+        .home-content {
+            display: flex;
+            align-items: flex-end;
+            text-align: left;
+            height: 100%;
+            width: 100%;
+            justify-content: center;
+            padding-bottom: 1em;
+        }
+
+        .home-content img {
+            height: 75%;
+            width: auto;
+            object-fit: contain;
+            align-self: flex-end;
+        }
+
+        .home-content .greeting {
+            margin-left: 2em;
+            align-self: center;
+        }
+
+        .home-content h1 {
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        .home-content span {
+            color: var(--primary-color);
+        }
+
+        /*!* Skills *!*/
+        /*.skills, .projects, .experience, .contact {*/
+        /*    padding: 5em 2em;*/
+        /*    text-align: center;*/
+        /*}*/
+
+        /* Sections fade-in effect */
+        .skills, .projects, .experience, .contact {
+            padding: 5em 2em;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        /* Reveal sections on scroll */
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1em;
+            margin-top: 2em;
+        }
+
+        /* Skills Cards Hover Effect */
+        .skill-card {
+            background: var(--primary-color);
+            padding: 1em;
+            text-align: center;
+            border-radius: 10px;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .skill-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+        }
+
+
+        .skill-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+            margin-top: 2em;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .project-card {
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-card:hover {
+            transform: scale(1.05);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .project-card h3 {
+            margin: 1em 0 0 0;
+        }
+
+        .project-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            text-align: left;
+            padding: 0 1em;
+            box-sizing: border-box;
+            background-color: #f3f3f3;
+            color: #000;
+            border-top: 1px solid #ddd;
+        }
+
+        /*.project-card.active .project-details {*/
+        /*    max-height: 300px;*/
+        /*    padding: 1em;*/
+        /*}*/
+
+        .project-card.centered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 1002;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            cursor: auto;
+            border: 2px solid var(--primary-color);
+            transition: all 0.5s ease;
+            pointer-events: auto; /* Ensure the open card remains clickable */
+            background-color: #fff;
+            color: #000;
+        }
+
+        .project-card.centered .project-details {
+            max-height: 500px;
+            padding: 1em;
+        }
+
+        .project-card.centered img {
+            height: 300px;
+        }
+
+        .project-card.centered h3 {
+            font-size: 2em;
+        }
+
+        /* Overlay to close card */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1001;
+            pointer-events: auto;
+        }
+
+        /* Experience Timeline */
+        .timeline {
+            border-left: 2px solid var(--primary-color);
+            margin: 2em 0;
+            padding-left: 2em;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            margin-bottom: 2em;
+            position: relative;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -1.3em;
+            top: 0.5em;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+
+        .timeline-content {
+            padding: 1em;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .timeline-content:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateX(10px);
+        }
+
+        .timeline-content h3 {
+            margin: 0 0 0.5em 0;
+        }
+
+        .timeline-content .timeline-date {
+            font-size: 0.9em;
+            color: var(--primary-color);
+        }
+
+        /* Contact */
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2em;
+            justify-content: center;
+            margin-top: 2em;
+        }
+
+        .contact-card {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 1em;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 200px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .contact-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 16px rgba(0, 188, 212, 0.5);
+        }
+
+        .contact-card i {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+        }
+
+        .contact-card a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            align-items: center;
+            margin-right: 1em;
+        }
+
+        .social-icons a {
+            color: #fff;
+            margin: 0 0.5em;
+            font-size: 1.5em;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-color);
+        }
+
+        .experience-details {
+            max-height: 0;
+            overflow: hidden;
+            margin-top: 0;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 0 1em;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+
+        .timeline-item.active .experience-details {
+            max-height: 300px;
+            padding: 1em;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Add cursor effect for better UX */
+        .timeline-item {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: scale(1.02);
+        }
+
+
+    </style>
+
+</head>
+<body class="dark-mode">
+<!-- Header -->
+<header class="header">
+    <div class="logo">Manoj Mali</div>
+    <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <div class="social-icons">
+        <!-- GitHub -->
+        <a href="https://github.com/MinsterMind" target="_blank" title="GitHub">
+            <i class="fa-brands fa-github"></i>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/minstermind/" target="_blank" title="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+        </a>
+
+        <!-- Mode Toggle Button -->
+        <button class="toggle-mode" id="mode-toggle" onclick="toggleMode()">🌞</button>
+    </div>
+</header>
+
+<!-- Home -->
+<section id="home" class="home dark-mode">
+    <div class="home-content">
+        <img src="https://raw.githubusercontent.com/MinsterMind/my-website/main/images/Manoj.png" alt="Manoj Mali">
+        <div class="greeting">
+            <h1>Hi there 👋,<br>I am <span>Manoj Mali</span></h1>
+        </div>
+    </div>
+</section>
+
+<!-- Skills -->
+<section id="skills" class="skills">
+    <h2>Technical Skills</h2>
+    <div class="skills-grid">
+        <div class="skill-card">RAG-based Architectures</div>
+        <div class="skill-card">Langchain</div>
+        <div class="skill-card">Python</div>
+        <div class="skill-card">Node.js</div>
+        <div class="skill-card">Java</div>
+        <div class="skill-card">Kubernetes</div>
+        <div class="skill-card">Docker</div>
+        <div class="skill-card">AWS</div>
+        <div class="skill-card">GCP</div>
+        <div class="skill-card">Microservice Architecture</div>
+        <div class="skill-card">Kafka</div>
+        <div class="skill-card">AI Infrastructure</div>
+    </div>
+</section>
+
+<!-- Projects -->
+<section id="projects" class="projects">
+    <h2>Projects</h2>
+    <div class="projects-grid" id="projectsGrid">
+        <!-- Call Score -->
+        <div class="project-card" onclick="expandProject(this)">
+            <img src="https://via.placeholder.com/300x200?text=Call+Score" alt="Call Score">
+            <h3>Call Score</h3>
+            <div class="project-details">
+                <p><strong>Description:</strong> Developed an API to analyze sales call audio, generate transcripts, and assign scores based on predefined criteria.</p>
+                <p><strong>Technologies:</strong> Python, OpenAI GPT-3.5, Langchain, Kafka</p>
+                <p><strong>Role:</strong> Led the design and implementation, optimized the pipeline, and integrated scalable processing.</p>
+            </div>
+        </div>
+
+        <!-- Real-Time Assist -->
+        <div class="project-card" onclick="expandProject(this)">
+            <img src="https://via.placeholder.com/300x200?text=Real-Time+Assist" alt="Real-Time Assist">
+            <h3>Real-Time Assist</h3>
+            <div class="project-details">
+                <p><strong>Description:</strong> Designed a RAG-based system for real-time contextual suggestions during live sales calls.</p>
+                <p><strong>Technologies:</strong> Python, OpenAI GPT-3.5, Langchain, RAG</p>
+                <p><strong>Role:</strong> Built a WebSocket API, optimized prompt engineering, and scaled infrastructure.</p>
+            </div>
+        </div>
+
+        <!-- Bhagavad Gita Chatbot -->
+        <div class="project-card" onclick="expandProject(this)">
+            <img src="https://via.placeholder.com/300x200?text=Bhagavad+Gita+Chatbot" alt="Bhagavad Gita Chatbot">
+            <h3>Bhagavad Gita Chatbot</h3>
+            <div class="project-details">
+                <p><strong>Description:</strong> Created a chatbot for interactive conversations with Bhagavad Gita characters.</p>
+                <p><strong>Technologies:</strong> Python, ChromaDB, Google Gemini</p>
+                <p><strong>Role:</strong> Engineered embeddings, integrated Google Gemini, and developed the backend in Python.</p>
+            </div>
+        </div>
+
+        <!-- Bus Tracking and ETA -->
+        <div class="project-card" onclick="expandProject(this)">
+            <img src="https://via.placeholder.com/300x200?text=Bus+Tracking" alt="Bus Tracking System">
+            <h3>Bus Tracking & ETA</h3>
+            <div class="project-details">
+                <p><strong>Description:</strong> Built a real-time bus tracking system with accurate ETA predictions.</p>
+                <p><strong>Technologies:</strong> Java, RabbitMQ, Firebase, Microservices</p>
+                <p><strong>Role:</strong> Migrated architecture, developed real-time services, and optimized GPS data pipelines.</p>
+            </div>
+        </div>
+
+        <!-- Article Recommendation System -->
+        <div class="project-card" onclick="expandProject(this)">
+            <img src="https://via.placeholder.com/300x200?text=Article+Recommendation" alt="Article Recommendation">
+            <h3>Article Recommendation</h3>
+            <div class="project-details">
+                <p><strong>Description:</strong> Developed a recommendation engine to suggest articles based on user activity.</p>
+                <p><strong>Technologies:</strong> Node.js, RabbitMQ, Python, BeautifulSoup</p>
+                <p><strong>Role:</strong> Designed architecture, built scraping pipelines, and optimized workflows.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Experience -->
+<!-- Experience -->
+<section id="experience" class="experience">
+    <h2>Experience Timeline</h2>
+    <div class="timeline">
+        <!-- Symbl.ai -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>Principal Engineer - Symbl.ai</h3>
+                <span class="timeline-date">May 2020 - Present</span>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Led the design and development of scalable software solutions, improving concurrency from 60 to 5000.</li>
+                        <li>Established best practices in software development, reducing defects by 20%.</li>
+                        <li>Optimized infrastructure, achieving a 50% cost reduction.</li>
+                        <li>Provided direct client support with a 98% satisfaction score.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chalo.com -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>Software Engineer III - Chalo.com</h3>
+                <span class="timeline-date">Dec 2017 - May 2020</span>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Transformed a monolithic system into a microservices architecture handling 1M+ GPS records per day.</li>
+                        <li>Implemented CI/CD pipelines, cutting manual intervention by 80%.</li>
+                        <li>Mentored a team of developers, boosting productivity by 30%.</li>
+                        <li>Developed a ticket booking platform with 40,000+ MAUs.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crowdfire -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>Senior Software Developer - Crowdfire</h3>
+                <span class="timeline-date">June 2015 - Dec 2017</span>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Built an article recommendation system scraping 0.5M+ articles daily.</li>
+                        <li>Optimized backend processes, reducing load times by 40%.</li>
+                        <li>Developed a user analytics service tracking 100,000+ profiles daily.</li>
+                        <li>Enhanced security measures to meet industry standards.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TCS -->
+        <div class="timeline-item" onclick="toggleExperienceDetails(this)">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>System Engineer - Tata Consultancy Services</h3>
+                <span class="timeline-date">Mar 2013 - May 2015</span>
+                <div class="experience-details">
+                    <p><strong>Key Achievements:</strong></p>
+                    <ul>
+                        <li>Managed database administration, boosting system reliability by 30%.</li>
+                        <li>Designed efficient database schemas, reducing query times by 20%.</li>
+                        <li>Collaborated on projects optimizing enterprise-level systems.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="contact">
+    <h2>Contact Me</h2>
+    <div class="contact-info">
+        <div class="contact-card">
+            <i class="fas fa-envelope"></i>
+            <p><a href="mailto:manoj@manojmali.com">manoj@manojmali.com</a></p>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-phone"></i>
+            <p>+91 9420759196</p>
+        </div>
+        <div class="contact-card">
+            <i class="fab fa-github"></i>
+            <p><a href="https://github.com/MinsterMind" target="_blank">GitHub</a></p>
+        </div>
+        <div class="contact-card">
+            <i class="fab fa-linkedin"></i>
+            <p><a href="https://www.linkedin.com/in/minstermind/" target="_blank">LinkedIn</a></p>
+        </div>
+    </div>
+</section>
+<script>
+    // Scroll Reveal Effect
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll('.skills, .projects, .experience, .contact');
+
+        const revealOnScroll = () => {
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < window.innerHeight - 100) {
+                    section.classList.add('fade-in');
+                }
+            });
+        };
+
+        window.addEventListener("scroll", revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // const overlay = document.createElement('div');
+        // overlay.id = 'overlay';
+        // document.body.appendChild(overlay);
+        // overlay.addEventListener('click', closeActiveCard);
+
+    });
+
+    function closeActiveCard() {
+        if (activeCard) {
+            activeCard.classList.remove('centered');
+            activeCard = null;
+        }
+
+        // Hide the overlay
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'none';
+    }
+
+    // Toggle Dark/Light Mode
+    function toggleMode() {
+        const body = document.body;
+        const home = document.getElementById('home');
+        const modeToggle = document.getElementById('mode-toggle');
+
+        if (body.classList.contains('dark-mode')) {
+            body.classList.replace('dark-mode', 'light-mode');
+            home.classList.replace('dark-mode', 'light-mode');
+            modeToggle.textContent = '🌙';
+        } else {
+            body.classList.replace('light-mode', 'dark-mode');
+            home.classList.replace('light-mode', 'dark-mode');
+            modeToggle.textContent = '🌞';
+        }
+    }
+
+    function toggleProjectDetails(card) {
+        card.classList.toggle('active');
+    }
+
+    let activeCard = null;
+
+    function expandProject(clickedCard) {
+        // If the clicked card is already active, collapse it
+        if (clickedCard === activeCard) {
+            closeActiveCard();
+            return;
+        }
+
+        // Close any existing active card
+        if (activeCard) {
+            activeCard.classList.remove('centered');
+            activeCard = null;
+        }
+
+        // Expand the clicked card
+        clickedCard.classList.add('centered');
+        activeCard = clickedCard;
+
+        // Show the overlay to darken the background
+        const overlay = document.getElementById('overlay');
+        overlay.style.display = 'block';
+        overlay.style.pointerEvents = 'auto'; // Allow closing the overlay
+    }
+
+    function toggleExperienceDetails(item) {
+        item.classList.toggle('active');
+    }
+
+</script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+</body>
+</html>
